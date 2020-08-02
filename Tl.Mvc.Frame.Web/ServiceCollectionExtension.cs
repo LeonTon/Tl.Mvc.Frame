@@ -13,7 +13,8 @@ namespace Tl.Mvc.Frame.Web
         public static IServiceCollection AddMvcController(this IServiceCollection services)
         {
             return services.AddSingleton<IActionDescriptorProvider, ActionDescriptorProvider>()
-                           .AddSingleton<IActionInvokerFactory, ActionInvokerFactory>();
+                           .AddSingleton<IActionInvokerFactory, ActionInvokerFactory>()
+                           .AddSingleton<IActionResultConvertor, ActionResultConvertor>();
         }
 
         public static IEndpointRouteBuilder MapMvcControllers(this IEndpointRouteBuilder builder)
