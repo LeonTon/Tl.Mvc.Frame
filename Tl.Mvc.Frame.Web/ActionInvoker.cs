@@ -21,11 +21,6 @@ namespace Tl.Mvc.Frame.Web
 
         public async Task InvokerAsync()
         {
-
-
-
-            
-            
             var controllerType = ActionContext.ActionDiscriptor.MethodInfo.DeclaringType;
             var serviceProvider = ActionContext.HttpContext.RequestServices;
             var controller = (Controller)ActivatorUtilities.CreateInstance(serviceProvider, controllerType);
@@ -60,7 +55,24 @@ namespace Tl.Mvc.Frame.Web
                 return await jsonResult;
             }
 
-            
+            if (returnValue.GetType().IsAssignableFrom(typeof(IActionResult)))
+            {
+
+            }
+
+
+            if (returnValue.GetType().BaseType == typeof(Task))
+            {
+                var declaredType = returnType.GenericTypeArguments.Single();
+                var b = declaredType.GetType();
+                // var bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static;
+                //var method  = new MethodInfo();
+                //method.MakeGenericMethod(declaredType).Invoke(null, Array.Empty<object>());
+                ////var taskOfResult = _taskConvertMethod.MakeGenericMethod(declaredType).Invoke(null, new object[] { returnValue, mapper });
+                ////return (Task<IActionResult>)taskOfResult;
+                //var type= de
+                //returnValue = (Task<declaredType.GetType()>).returnType
+            }
             return await Task.FromResult(convertor.Convert(returnValue, returnType));
         }
 

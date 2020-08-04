@@ -24,12 +24,21 @@ namespace Tl.Mvc.Frame
         //public Task Index() => ActionContext.HttpContext.Response.WriteAsync("hello world");
 
         [HttpGet("ContentResult")]
+        [HttpGet("/")]
         public Task<Web.ContentResult> GetContentResultAsync() => Task.FromResult(new Web.ContentResult(_html, "text/html"));
 
         [HttpGet("JsonResult")]
         public Task<Web.JsonResult> GetJsonResultAsync() => Task.FromResult(new Web.JsonResult(new { result = "hello" }));
 
-        [HttpGet("string")]
+        [HttpGet("stringAsync")]
         public Task<string> GetStringResultAsync() => Task.FromResult(_html);
+
+
+        [HttpGet("task")]
+        public Task GetTaskAsync() => Task.CompletedTask;
+
+
+        [HttpGet("string")]
+        public string String() =>"hello";
     }
 }
