@@ -9,7 +9,9 @@ namespace Tl.Mvc.Frame.Web
     {
         public IActionResult Convert(object value, Type returnType)
         {
-            return new ContentResult(value.ToString(), "text/plain");
+            return value is IActionResult actionResult
+            ? actionResult 
+            : new ContentResult(value.ToString(), "text/plain");
         }
     }
 }

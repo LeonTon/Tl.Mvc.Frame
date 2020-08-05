@@ -30,15 +30,15 @@ namespace Tl.Mvc.Frame
         [HttpGet("JsonResult")]
         public Task<Web.JsonResult> GetJsonResultAsync() => Task.FromResult(new Web.JsonResult(new { result = "hello" }));
 
-        [HttpGet("stringAsync")]
+        [HttpGet("StringAsync")]
         public Task<string> GetStringResultAsync() => Task.FromResult(_html);
 
 
-        [HttpGet("task")]
+        [HttpGet("Task")]
         public Task GetTaskAsync() => Task.CompletedTask;
 
 
-        [HttpGet("string")]
+        [HttpGet("String")]
         public string String() =>"hello";
     }
 }

@@ -11,7 +11,7 @@ namespace Tl.Mvc.Frame.Web
         {
         }
 
-        public NullActionResult Instance { get; } = new NullActionResult();
+        public static NullActionResult Instance { get; } = new NullActionResult();
 
         public Task ExcuteResultAsync(ActionContext actionContext)
         {
