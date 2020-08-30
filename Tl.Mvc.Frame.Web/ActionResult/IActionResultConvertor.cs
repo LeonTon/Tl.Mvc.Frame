@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Tl.Mvc.Frame.Web
 {
-    public interface IActionMethodExcutor
+    public interface IActionResultConvertor
     {
-        Task ExcuteAsync(Controller controller);
+        IActionResult Convert(object result, ActionContext actionContext);
     }
 }

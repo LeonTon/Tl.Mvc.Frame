@@ -25,10 +25,12 @@ namespace Tl.Mvc.Frame
 
         [HttpGet("ContentResult")]
         [HttpGet("/")]
-        public Task<Web.ContentResult> GetContentResultAsync() => Task.FromResult(new Web.ContentResult(_html, "text/html"));
+        public Task<Web.ContentResult> GetContentResultAsync() =>
+            Task.FromResult(new Web.ContentResult(_html, "text/html"));
 
         [HttpGet("JsonResult")]
-        public Task<Web.JsonResult> GetJsonResultAsync() => Task.FromResult(new Web.JsonResult(new { result = "hello" }));
+        public Task<Web.JsonResult> GetJsonResultAsync() => 
+            Task.FromResult(new Web.JsonResult(new { result = "hello" }));
 
         [HttpGet("StringAsync")]
         public Task<string> GetStringResultAsync() => Task.FromResult(_html);

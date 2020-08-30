@@ -27,8 +27,11 @@ namespace Tl.Mvc.Frame.Web
             controller.ActionContext = ActionContext;
 
             var excutor = serviceProvider.GetRequiredService<IActionMethodExcutor>();
-            await excutor.ExcuteAsync(controller);
-            //return result is Task task ? task : Task.CompletedTask;
+
+            var result = excutor.Convert(controller, ActionContext, new object[0]);
+            var converter = serviceProvider.GetRequiredService<IActionResultConvertor>();
+            var actionResult = converter.Convert(result, ActionContext);
+            await actionResult.ExcuteResultAsync(ActionContext);
         }
 
     }
