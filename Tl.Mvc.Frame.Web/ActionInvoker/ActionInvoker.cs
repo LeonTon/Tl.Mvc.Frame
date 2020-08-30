@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
+using Tl.Mvc.Frame.Web.ModelBinding;
 
 namespace Tl.Mvc.Frame.Web
 {
@@ -25,10 +21,27 @@ namespace Tl.Mvc.Frame.Web
             var serviceProvider = ActionContext.HttpContext.RequestServices;
             var controller = (Controller)ActivatorUtilities.CreateInstance(serviceProvider, controllerType);
             controller.ActionContext = ActionContext;
-
             var excutor = serviceProvider.GetRequiredService<IActionMethodExcutor>();
 
-            var result = excutor.Convert(controller, ActionContext, new object[0]);
+            var valueFactories = serviceProvider.GetServices<IValueProviderFactory>();
+            var valueProviders = valueFactories.Select(item => item.CreateValueProvider(ActionContext)).ToArray();
+            var valueProvider = new CompositeValueProvider(valueProviders);
+            var paramters = ActionContext.ActionDiscriptor.MethodInfo.GetParameters();
+            var arguments = new object[paramters.Length];
+            var modelBinderFactory = serviceProvider.GetRequiredService<IModelBinderFactory>();
+            for (int index = 0; index < arguments.Length; index++)
+            {
+                var metadata = ModelMetadata.Create(paramters[index]);
+                var binder = modelBinderFactory.CreateModelBinder(metadata);
+                var binderContext = valueProvider.ContainsPrefix(metadata.ModelName)
+                    ? new ModelBindingContext(ActionContext, metadata, valueProvider, metadata.ModelName)
+                    : new ModelBindingContext(ActionContext, metadata, valueProvider, "");
+                await binder.BindAsync(binderContext);
+                arguments[index] = binderContext.Model;
+            }
+
+            var result = excutor.Convert(controller, ActionContext, arguments);
+            //var result = excutor.Convert(controller, ActionContext, new object[0]);
             var converter = serviceProvider.GetRequiredService<IActionResultConvertor>();
             var actionResult = converter.Convert(result, ActionContext);
             await actionResult.ExcuteResultAsync(ActionContext);
