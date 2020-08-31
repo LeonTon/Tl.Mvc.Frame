@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tl.Mvc.Frame.Web
 {
-    public class ActionMethodExcutor : IActionMethodExcutor
+    public class ActionMethodExecutor : IActionMethodExecutor
     {
         public object Convert(object controller, ActionContext actionContext, object[] arguments)
         {
