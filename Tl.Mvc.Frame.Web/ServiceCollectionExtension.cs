@@ -15,7 +15,7 @@ namespace Tl.Mvc.Frame.Web
             return services.AddSingleton<IActionDescriptorProvider, ActionDescriptorProvider>()
                            .AddSingleton<IActionInvokerFactory, ActionInvokerFactory>()
                            .AddSingleton<IActionResultConvertor, ActionResultConvertor>()
-                           .AddSingleton<IActionMethodExcutor, ActionMethodExcutor>();
+                           .AddSingleton<IActionMethodExecutor, ActionMethodExecutor>();
         }
 
         public static IEndpointRouteBuilder MapMvcControllers(this IEndpointRouteBuilder builder)
