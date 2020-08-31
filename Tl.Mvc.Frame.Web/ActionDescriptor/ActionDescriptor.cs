@@ -13,7 +13,10 @@ namespace Tl.Mvc.Frame.Web
             RouteInfo = routeInfo;
 
             ActionName = methodInfo.Name;
-            ActionName = ActionName.Substring(0, ActionName.Length - "Async".Length);
+            if (ActionName.EndsWith("Async"))
+            {
+                ActionName = ActionName.Substring(0, ActionName.Length - "Async".Length);
+            }
 
             ControllerName = methodInfo.DeclaringType.Name;
             ControllerName = ControllerName.Substring(0, ControllerName.Length - "Controller".Length);

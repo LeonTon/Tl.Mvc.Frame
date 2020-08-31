@@ -42,5 +42,12 @@ namespace Tl.Mvc.Frame
 
         [HttpGet("String")]
         public string String() =>"hello";
+
+
+        [HttpGet("foo")]
+        public Task<Web.JsonResult> Foo(string foo, int bar, double baz)
+        {
+            return Task.FromResult(new Web.JsonResult(new { Foo = foo, Bar = bar, Baz = baz }));
+        }
     }
 }
