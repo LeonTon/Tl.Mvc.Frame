@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,37 +8,74 @@ namespace Tl.Mvc.Frame.Web.ModelBinding.ArrayBinder
 {
     public class ArrayModelBinder : IModelBinder
     {
-        public Task BindAsync(ModelBindingContext modelBindingContext)
+        public async Task BindAsync(ModelBindingContext modelBindingContext)
         {
             List<object> list = new List<object>();
 
-            if (string.IsNullOrEmpty(prefix) && this.ValueProvider.ContainsPrefix(prefix))
+            if (string.IsNullOrEmpty(modelBindingContext.ModelName)
+                && modelBindingContext.ValueProvider.ContainsPrefix(modelBindingContext.ModelName))
             {
-                IEnumerable enumerable = this.ValueProvider.GetValue(prefix).ConvertTo(parameterType) as IEnumerable;
-                if (null != enumerable)
+                if (modelBindingContext.ValueProvider.TryGetValues(modelBindingContext.ModelName, out var values))
                 {
-                    foreach (var value in enumerable)
+                    var enumerable = Convert.ChangeType(values.Last(), modelBindingContext.ModelMetadata.ModelType) as IEnumerable;
+                    if (null != enumerable)
                     {
-                        list.Add(value);
+                        foreach (var value in enumerable)
+                        {
+                            list.Add(value);
+                        }
                     }
                 }
+
+
             }
 
             bool numericIndex;
-            IEnumerable<string> indexes = GetIndexes(prefix, out numericIndex);
+            IEnumerable<string> indexes = GetIndexes(modelBindingContext, modelBindingContext.ModelName, out numericIndex);
             foreach (var index in indexes)
             {
-                string indexPrefix = prefix + "[" + index + "]";
-                if (!this.ValueProvider.ContainsPrefix(indexPrefix) && numericIndex)
+                string indexPrefix = modelBindingContext.ModelName + "[" + index + "]";
+                if (!modelBindingContext.ValueProvider.ContainsPrefix(indexPrefix) && numericIndex)
                 {
                     break;
                 }
-                list.Add(BindModel(parameterType.GetElementType(), indexPrefix));
+                list.Add(BindModel(modelBindingContext.ModelMetadata.ModelType.GetElementType(), indexPrefix));
             }
-            object[] array = (object[])Array.CreateInstance(parameterType.GetElementType(), list.Count);
+            object[] array = (object[])Array.CreateInstance(modelBindingContext.ModelMetadata.ModelType, list.Count);
             list.CopyTo(array);
-            return array;
-            throw new NotImplementedException();
+            await binder.BindAsync(propertyContext);
+            if (propertyContext.IsModelSet)
+            {
+                property.SetValue(model, propertyContext.Model);
+            }
+        }
+
+        private IEnumerable<string> GetIndexes(ModelBindingContext modelBindingContext, string prefix, out bool numericIndex)
+        {
+            string key = string.IsNullOrEmpty(prefix) ? "index" : prefix + "." + "index";
+            if (modelBindingContext.ValueProvider.TryGetValues(modelBindingContext.ModelName, out var values))
+            {
+                if (null != values)
+                {
+                    string[] indexes = Convert.ChangeType(values, typeof(string[])) as string[];
+                    if (null != indexes)
+                    {
+                        numericIndex = false;
+                        return indexes;
+                    }
+                }
+            }
+            numericIndex = true;
+            return GetZeroBasedIndexes();
+        }
+        private static IEnumerable<string> GetZeroBasedIndexes()
+        {
+            int iteratorVariable0 = 0;
+            while (true)
+            {
+                yield return iteratorVariable0.ToString();
+                iteratorVariable0++;
+            }
         }
     }
 }

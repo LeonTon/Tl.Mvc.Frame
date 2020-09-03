@@ -30,6 +30,7 @@ namespace Tl.Mvc.Frame.Web.ModelBinding
 
         public static ModelMetadata Create(ParameterInfo parameterInfo)
        => new ModelMetadata(parameterInfo, null);
+
         public static ModelMetadata Create(PropertyInfo propertyInfo)
         => new ModelMetadata(null, propertyInfo);
     }

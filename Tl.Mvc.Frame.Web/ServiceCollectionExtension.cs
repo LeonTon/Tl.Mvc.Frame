@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Tl.Mvc.Frame.Web.ModelBinding;
+using Tl.Mvc.Frame.Web.ModelBinding.ComplexTypeBinder;
 using Tl.Mvc.Frame.Web.ModelBinding.SimpleTypeBinder;
 
 namespace Tl.Mvc.Frame.Web
@@ -17,12 +18,17 @@ namespace Tl.Mvc.Frame.Web
             return services.AddSingleton<IActionDescriptorProvider, ActionDescriptorProvider>()
                            .AddSingleton<IActionInvokerFactory, ActionInvokerFactory>()
                            .AddSingleton<IActionResultConvertor, ActionResultConvertor>()
-                           .AddSingleton<IActionMethodExecutor, ActionMethodExecutor>();
+                           .AddSingleton<IActionMethodExecutor, ActionMethodExecutor>()
                            .AddSingleton<IActionResultConvertor, ActionResultConvertor>()
+
                            .AddSingleton<IModelBinderFactory, ModelBinderFactory>()
                            .AddSingleton<IValueProviderFactory, FormValueProviderFactory>()
                            .AddSingleton<IValueProviderFactory, QueryStringValueProviderFactory>()
-                           .AddSingleton<IModelBinderProvider, SimpleTypeBinderProvider>();
+                           .AddSingleton<IModelBinderProvider, SimpleTypeBinderProvider>()
+                           .AddSingleton<IModelBinderProvider, ComplexTypeBinderProvider>()
+                           
+                           ;
+
 
         }
 
