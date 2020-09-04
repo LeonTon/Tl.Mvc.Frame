@@ -49,5 +49,11 @@ namespace Tl.Mvc.Frame
         {
             return Task.FromResult(new Web.JsonResult(new { Foo = foo, Bar = bar, Baz = baz }));
         }
+
+        [HttpPost("bar")]
+        public Task<Web.JsonResult> Bar([FromForm]string[] bar)
+        {
+            return Task.FromResult(new Web.JsonResult(new { bar }));
+        }
     }
 }

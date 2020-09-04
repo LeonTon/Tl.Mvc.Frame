@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Tl.Mvc.Frame.Web.ModelBinding;
+using Tl.Mvc.Frame.Web.ModelBinding.ArrayBinder;
 using Tl.Mvc.Frame.Web.ModelBinding.ComplexTypeBinder;
 using Tl.Mvc.Frame.Web.ModelBinding.SimpleTypeBinder;
 
@@ -26,7 +28,7 @@ namespace Tl.Mvc.Frame.Web
                            .AddSingleton<IValueProviderFactory, QueryStringValueProviderFactory>()
                            .AddSingleton<IModelBinderProvider, SimpleTypeBinderProvider>()
                            .AddSingleton<IModelBinderProvider, ComplexTypeBinderProvider>()
-                           
+                           .AddSingleton<IModelBinderProvider, ArrayBinderProvider>()
                            ;
 
 

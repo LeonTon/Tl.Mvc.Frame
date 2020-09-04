@@ -33,7 +33,7 @@ namespace Tl.Mvc.Frame.Web
                 return Descriptors.Select(CreateEndpoint).ToList();
             }
 
-            Endpoint CreateEndpoint(ActionDescriptor actionDiscriptor)
+            Endpoint CreateEndpnaoint(ActionDescriptor actionDiscriptor)
             {
                 var routePattern = RoutePatternFactory.Parse(actionDiscriptor.RouteInfo.Template);
                 var newRoutePattern = transformer.SubstituteRequiredValues(routePattern, new Dictionary<string, string>

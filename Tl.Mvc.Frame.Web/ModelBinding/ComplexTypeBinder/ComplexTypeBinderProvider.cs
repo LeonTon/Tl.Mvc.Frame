@@ -16,6 +16,7 @@ namespace Tl.Mvc.Frame.Web.ModelBinding.ComplexTypeBinder
                 return null;
             }
             return modelMetadata.ParameterInfo?.GetCustomAttribute<FromBodyAttribute>() != null
+                   && !modelMetadata.ParameterInfo.ParameterType.IsArray
                 ? new ComplexTypeModelBinder()
                 : null;
         }

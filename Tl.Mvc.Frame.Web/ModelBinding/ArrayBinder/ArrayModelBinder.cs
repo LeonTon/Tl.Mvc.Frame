@@ -2,52 +2,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Tl.Mvc.Frame.Web.ModelBinding.ArrayBinder
 {
     public class ArrayModelBinder : IModelBinder
     {
-        public async Task BindAsync(ModelBindingContext modelBindingContext)
+        public Task BindAsync(ModelBindingContext modelBindingContext)
         {
             List<object> list = new List<object>();
-
-            if (string.IsNullOrEmpty(modelBindingContext.ModelName)
-                && modelBindingContext.ValueProvider.ContainsPrefix(modelBindingContext.ModelName))
+            if (modelBindingContext.ValueProvider.TryGetValues(modelBindingContext.ModelMetadata.ModelName, out var values))
             {
-                if (modelBindingContext.ValueProvider.TryGetValues(modelBindingContext.ModelName, out var values))
+                var obj = JsonSerializer.Deserialize<List<string>>(values.Last());
+                var b = Convert.ChangeType(obj, modelBindingContext.ModelMetadata.ParameterInfo.ParameterType);
+                var enumerable = Convert.ChangeType(obj, modelBindingContext.ModelMetadata.ModelType) as IEnumerable;
+                if (null != enumerable)
                 {
-                    var enumerable = Convert.ChangeType(values.Last(), modelBindingContext.ModelMetadata.ModelType) as IEnumerable;
-                    if (null != enumerable)
+                    foreach (var value in enumerable)
                     {
-                        foreach (var value in enumerable)
-                        {
-                            list.Add(value);
-                        }
+                        list.Add(value);
                     }
                 }
-
-
             }
 
-            bool numericIndex;
-            IEnumerable<string> indexes = GetIndexes(modelBindingContext, modelBindingContext.ModelName, out numericIndex);
-            foreach (var index in indexes)
-            {
-                string indexPrefix = modelBindingContext.ModelName + "[" + index + "]";
-                if (!modelBindingContext.ValueProvider.ContainsPrefix(indexPrefix) && numericIndex)
-                {
-                    break;
-                }
-                list.Add(BindModel(modelBindingContext.ModelMetadata.ModelType.GetElementType(), indexPrefix));
-            }
-            object[] array = (object[])Array.CreateInstance(modelBindingContext.ModelMetadata.ModelType, list.Count);
+            object[] array =(object[]) Array.CreateInstance(modelBindingContext.ModelMetadata.ModelType,list.Count);
             list.CopyTo(array);
-            await binder.BindAsync(propertyContext);
-            if (propertyContext.IsModelSet)
-            {
-                property.SetValue(model, propertyContext.Model);
-            }
+            modelBindingContext.Bind(array);
+
+            return Task.CompletedTask;
         }
 
         private IEnumerable<string> GetIndexes(ModelBindingContext modelBindingContext, string prefix, out bool numericIndex)
