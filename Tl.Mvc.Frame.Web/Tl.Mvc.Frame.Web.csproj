@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="ModelBinding\DictionaryBinder\" />
-    <Folder Include="ModelBinding\ListBinder\" />
   </ItemGroup>
 
 </Project>

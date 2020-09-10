@@ -10,6 +10,7 @@ using Tl.Mvc.Frame.Web.ModelBinding;
 using Tl.Mvc.Frame.Web.ModelBinding.ArrayBinder;
 using Tl.Mvc.Frame.Web.ModelBinding.ComplexTypeBinder;
 using Tl.Mvc.Frame.Web.ModelBinding.SimpleTypeBinder;
+using Tl.Mvc.Frame.Web.ModelBinding.IEnumerableBinder;
 
 namespace Tl.Mvc.Frame.Web
 {
@@ -29,6 +30,7 @@ namespace Tl.Mvc.Frame.Web
                            .AddSingleton<IModelBinderProvider, SimpleTypeBinderProvider>()
                            .AddSingleton<IModelBinderProvider, ComplexTypeBinderProvider>()
                            .AddSingleton<IModelBinderProvider, ArrayBinderProvider>()
+                           .AddSingleton<IModelBinderProvider, IEnumerableBinderProvider>()
                            ;
 
 

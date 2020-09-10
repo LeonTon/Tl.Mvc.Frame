@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tl.Mvc.Frame.Web;
 
@@ -70,6 +71,6 @@ namespace Tl.Mvc.Frame
 
         public string Bar { get; set; }
 
-        public string[] Baz { get; set; }
+        public IEnumerable<string> Baz { get; set; }
     }
 }
