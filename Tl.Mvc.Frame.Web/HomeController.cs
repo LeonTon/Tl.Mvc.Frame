@@ -70,6 +70,6 @@ namespace Tl.Mvc.Frame
 
         public string Bar { get; set; }
 
-        public string Baz { get; set; }
+        public string[] Baz { get; set; }
     }
 }
