@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -10,13 +11,21 @@ namespace Tl.Mvc.Frame.Web.ModelBinding.IEnumerableBinder
     {
         public Task BindAsync(ModelBindingContext modelBindingContext)
         {
-            List<string> list = new List<string>();
+            IList list = null;
             if (modelBindingContext.ValueProvider.TryGetValues(modelBindingContext.ModelMetadata.ModelName, out var values))
             {
-                var stringList = JsonSerializer.Deserialize<List<string>>(values.Last());
-                foreach (var str in stringList)
+                var array = (IEnumerable<object>)JsonSerializer.Deserialize(values.Last(), modelBindingContext.ModelMetadata.ModelType);
+
+                Type elementType = modelBindingContext.ModelMetadata.ModelType.GetGenericArguments()[0];
+
+                if (array != null && array.Count() > 0)
                 {
-                    list.Add(str);
+                    list = Array.CreateInstance(elementType, array.Count());
+                    for (int i = 0; i < array.Count(); i++)
+                    {
+                        var convertResult = Convert.ChangeType(array.ToArray()[i], elementType);
+                        list[i] = convertResult;
+                    }
                 }
 
             }

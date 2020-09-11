@@ -16,16 +16,28 @@ namespace Tl.Mvc.Frame.Web.ModelBinding.ArrayBinder
 
             if (modelBindingContext.ValueProvider.TryGetValues(modelBindingContext.ModelMetadata.ModelName, out var values))
             {
-
-                var list = (object[])JsonSerializer.Deserialize(values.Last(), modelBindingContext.ModelMetadata.ModelType);
                 Type elementType = modelBindingContext.ModelMetadata.ModelType.GetElementType();
 
-                if (list != null && list.Length > 0)
+                if (values.Length == 1)
                 {
-                    array = Array.CreateInstance(elementType, list.Length);
-                    for (int i = 0; i < list.Length; i++)
+                    var list = (object[]) JsonSerializer.Deserialize(values.Last(),
+                        modelBindingContext.ModelMetadata.ModelType);
+                    if (list != null && list.Length > 0)
                     {
-                        var convertResult = Convert.ChangeType(list.GetValue(i), elementType);
+                        array = Array.CreateInstance(elementType, list.Length);
+                        for (int i = 0; i < list.Length; i++)
+                        {
+                            var convertResult = Convert.ChangeType(list.GetValue(i), elementType);
+                            array[i] = convertResult;
+                        }
+                    }
+                }
+                else
+                {
+                    array = Array.CreateInstance(elementType, values.Length);
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        var convertResult = Convert.ChangeType(values.GetValue(i), elementType);
                         array[i] = convertResult;
                     }
                 }
