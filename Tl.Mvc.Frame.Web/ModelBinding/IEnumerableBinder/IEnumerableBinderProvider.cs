@@ -18,8 +18,8 @@ namespace Tl.Mvc.Frame.Web.ModelBinding.IEnumerableBinder
             }
             return (modelMetadata.ParameterInfo?.GetCustomAttribute<FromFormAttribute>() != null
                    && modelMetadata.ParameterInfo.ParameterType.IsArray)
-                   || modelMetadata.PropertyInfo.PropertyType.IsSubclassOf(typeof(IEnumerable))
-                   
+                   || modelMetadata.PropertyInfo.PropertyType.GetInterfaces().Any(item => item == typeof(IEnumerable))
+
                 ? new IEnumerableModelBinder()
                 : null;
         }
