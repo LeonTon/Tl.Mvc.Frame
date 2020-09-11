@@ -18,7 +18,7 @@ namespace Tl.Mvc.Frame.Web.ModelBinding.ArrayBinder
             }
             return (modelMetadata.ParameterInfo?.GetCustomAttribute<FromFormAttribute>() != null
                    && modelMetadata.ParameterInfo.ParameterType.IsArray)
-                   ||modelMetadata.PropertyInfo.PropertyType.IsArray
+                   || modelMetadata.PropertyInfo.PropertyType.IsArray
                 ? new ArrayModelBinder()
                 : null;
         }
